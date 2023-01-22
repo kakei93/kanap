@@ -1,13 +1,10 @@
 /* récupérer data dans l'url*/
 const dataURL = window.location.search;
-console.log(dataURL);
 
 /* extraction id */
 const Params = new URLSearchParams(dataURL);
-console.log(Params);
 
 const _id = Params.get("id");
-console.log(_id);
 
 /* appel API du produit via l'id = */
 
@@ -44,3 +41,55 @@ const dataProduct = (product) => {
       eltColor.innerHTML + `<option value="${color}">${color}</option>`;
   });
 };
+
+// recupération data choix client"
+const btnAjoutPanier = document.getElementById("addToCart");
+
+/* Envoi les données du client au local storage */
+btnAjoutPanier.addEventListener("click", (e) => {
+  e.preventDefault();
+  const productColor = document.getElementById("colors").value;
+  const productQuantity = document.getElementById("quantity").value;
+  /* vérification saisi client */
+  if (
+    productColor == null ||
+    productColor === "" ||
+    productQuantity == null ||
+    productQuantity == 0
+  ) {
+    alert("selectionner une couleur et une quantité");
+    return;
+  }
+
+  const productData = {
+    id: _id,
+    color: productColor,
+    quantity: Number(productQuantity),
+  };
+
+  /* Vérification si produit dans localStorage */
+  let inCart = JSON.parse(localStorage.getItem("item"));
+
+  /* Ajout d'un produit dans le localStorage */
+  if (!inCart) {
+    inCart = [];
+    inCart.push(productData);
+    localStorage.setItem("item", JSON.stringify(inCart));
+  } else {
+    /* Vérification si doublon dans le localStorage */
+    const index = inCart.findIndex(
+      (product) =>
+        productData.id == product.id && productData.color == product.color
+    );
+    /* Si oui, incrémentation de la quantité du produit existant */
+    if (index > -1) {
+      inCart[index].quantity =
+        parseInt(inCart[index].quantity) + parseInt(productData.quantity);
+      localStorage.setItem("item", JSON.stringify(inCart));
+      /* Si non, incrémentation un nouvel objet dans le tableau */
+    } else {
+      inCart.push(productData);
+      localStorage.setItem("item", JSON.stringify(inCart));
+    }
+  }
+});
