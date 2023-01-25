@@ -31,18 +31,13 @@ const dataProduct = (product) => {
   eltDescription.innerHTML = `${product.description}`;
 
   const eltColor = document.getElementById("colors");
-  //   eltColor.innerHTML =
-  //     eltColor.innerHTML +
-  //     `<option value="${product.colors[0]}">${product.colors[0]}</option>`;
-  //   eltColor.innerHTML += `<option value="${product.colors[1]}">${product.colors[1]}</option>`;
-  //   eltColor.innerHTML += `<option value="${product.colors[2]}">${product.colors[2]}</option>`;
   product.colors.forEach((color) => {
     eltColor.innerHTML =
       eltColor.innerHTML + `<option value="${color}">${color}</option>`;
   });
 };
 
-// recupération data choix client"
+/* recupération data choix client */
 const btnAjoutPanier = document.getElementById("addToCart");
 
 /* Envoi les données du client au local storage */
