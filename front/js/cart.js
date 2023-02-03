@@ -156,22 +156,10 @@ const useBtnSuppr = () => {
   }
 };
 
-/* Fonction de validation des champs adresse et ville */
-const validInput = function (input) {
-  let textError = input.nextElementSibling;
-  if (input.value.length > 0) {
-    textError.innerHTML = "";
-    return true;
-  } else {
-    textError.innerHTML = "Merci de renseigner ce champ";
-    return false;
-  }
-};
-
 /* Fonction de validation des champs Prénom et Nom */
 const validName = (inputName) => {
   //Création des conditions d'acceptation du Nom et Prénom
-  let nameRegExp = new RegExp("^([a-z]+[,.]?[ ]?|[a-z]+['-]?)+$");
+  let nameRegExp = new RegExp("^([a-zA-Z]+[,.]?[ ]?|[a-z]+['-]?)+$");
   let textError = inputName.nextElementSibling;
   if (inputName.value.length > 0) {
     if (nameRegExp.test(inputName.value)) {
@@ -179,6 +167,60 @@ const validName = (inputName) => {
       return true;
     } else {
       textError.innerHTML = "Format incorrect. Ex : John";
+      return false;
+    }
+  } else {
+    textError.innerHTML = "Veuillez renseigner ce champ";
+    return false;
+  }
+};
+
+/* Fonction de validation des champs adresse */
+const validAddress = (inputAddress) => {
+  let addressRegExp = new RegExp("^([a-zA-Z0-9]+[,.]?[ ]?|[a-z]+['-]?)+$");
+  let textError = inputAddress.nextElementSibling;
+  if (inputAddress.value.length > 0) {
+    if (addressRegExp.test(inputAddress.value)) {
+      textError.innerHTML = "";
+      return true;
+    } else {
+      textError.innerHTML = "Format incorrect. Ex : 18 rue de la Paix";
+      return false;
+    }
+  } else {
+    textError.innerHTML = "Veuillez renseigner ce champ";
+    return false;
+  }
+};
+
+/* fonction validation du champs ville */
+const validCity = (inputCity) => {
+  let cityRegExp = new RegExp("^([a-zA-Z]+[,.]?[ ]?|[a-z]+['-]?)+$");
+  let textError = inputCity.nextElementSibling;
+  if (inputCity.value.length > 0) {
+    if (cityRegExp.test(inputCity.value)) {
+      textError.innerHTML = "";
+      return true;
+    } else {
+      textError.innerHTML = "Format incorrect. Ex : Paris";
+      return false;
+    }
+  } else {
+    textError.innerHTML = "Veuillez renseigner ce champ";
+    return false;
+  }
+};
+
+/* Fonction de validation du champ email */
+const validEmail = (inputEmail) => {
+  let emailRegExp = new RegExp("[a-z0-9]+@[a-z]+\\.[a-z]{2,3}");
+  let textError = inputEmail.nextElementSibling;
+  if (inputEmail.value.length > 0) {
+    if (emailRegExp.test(inputEmail.value)) {
+      textError.innerHTML = "";
+      return true;
+    } else {
+      textError.innerHTML = "Format de l'email incorrect. Ex : user@gmail.com";
       return false;
     }
   } else {
@@ -202,13 +244,13 @@ lastName.addEventListener("change", function () {
 /* Variable champ Adresse */
 const address = document.getElementById("address");
 address.addEventListener("change", function () {
-  validInput(address);
+  validAddress(address);
 });
 
 /* Variable champ Ville */
 const city = document.getElementById("city");
 city.addEventListener("change", function () {
-  validInput(city);
+  validCity(city);
 });
 
 /* Variable du champ Email */
@@ -216,25 +258,6 @@ const email = document.getElementById("email");
 email.addEventListener("change", function () {
   validEmail(email);
 });
-
-/* Fonction de validation du champ email */
-const validEmail = (inputEmail) => {
-  /* Création des conditions d'acceptation de l'email */
-  let emailRegExp = new RegExp("[a-z0-9]+@[a-z]+\\.[a-z]{2,3}");
-  let textError = inputEmail.nextElementSibling;
-  if (inputEmail.value.length > 0) {
-    if (emailRegExp.test(inputEmail.value)) {
-      textError.innerHTML = "";
-      return true;
-    } else {
-      textError.innerHTML = "Format de l'email incorrect. Ex : user@gmail.com";
-      return false;
-    }
-  } else {
-    textError.innerHTML = "Veuillez renseigner ce champ";
-    return false;
-  }
-};
 
 /* Fonction récupération des id produits dans le panier */
 const idItems = [];
@@ -281,10 +304,10 @@ const sendOrder = () => {
     });
 
     if (!validEmail(email)) formValid = false;
-
+    /* requête method POST */
     if (formValid) {
       try {
-        async function urlPost() {
+        async function formPost() {
           console.log(JSON.stringify(dataItem));
           let response = await fetch(
             "http://localhost:3000/api/products/order",
@@ -300,7 +323,7 @@ const sendOrder = () => {
           idOrder = data.orderId;
           window.location.href = "./confirmation.html?id-order=" + idOrder;
         }
-        urlPost();
+        formPost();
       } catch (err) {
         alert(`${err}`);
       }
