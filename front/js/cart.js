@@ -295,8 +295,12 @@ const sendOrder = () => {
     /* Vérification si tout le formulaire est correct avant l'envoi */
     let formValid = true;
 
-    [address, city].forEach((e) => {
-      if (!validInput(e)) formValid = false;
+    [address].forEach((e) => {
+      if (!validAddress(e)) formValid = false;
+    });
+
+    [city].forEach((e) => {
+      if (!validCity(e)) formValid = false;
     });
 
     [firstName, lastName].forEach((e) => {
